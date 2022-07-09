@@ -4,17 +4,15 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      app1:
-        type: string
-      app2:
+      workflow_id:
         type: string
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name << parameters.app1 >>-${CIRCLE_WORKFLOW_ID:0:7}
-            aws cloudformation delete-stack --stack-name << parameters.app2 >>-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >>
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >>
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -166,8 +164,7 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       - destroy-environment:
-          app1: udapeople-backend
-          app2: udapeople-frontend
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   configure-infrastructure:
     docker:
@@ -181,15 +178,14 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip ansible awscli
+            apk add --update tar gzip ansible aws-cli
       - run:
           name: Configure server
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
-          app1: udapeople-backend
-          app2: udapeople-frontend 
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   run-migrations:
     docker:
@@ -216,8 +212,7 @@ jobs:
                 curl https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - destroy-environment:
-          app1: udapeople-backend
-          app2: udapeople-frontend 
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations 
       
   deploy-frontend:
@@ -234,7 +229,7 @@ jobs:
             yum install -y ansible
             yum install -y node
             yum install -y npm    
-            yum install -y awscli   
+            yum install -y aws-cli   
       - run:
           name: Get backend url
           command: |
@@ -254,8 +249,7 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
-          app1: udapeople-backend
-          app2: udapeople-frontend 
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations 
 
   deploy-backend:
@@ -270,7 +264,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip ansible node npm awscli
+            apk add --update tar gzip ansible node npm aws-cli
       - run:
           name: Deploy backend
           command: |
@@ -285,8 +279,7 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment:
-          app1: udapeople-backend
-          app2: udapeople-frontend 
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations 
 
   smoke-test:
@@ -297,7 +290,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update curl node npm awscli
+            apk add --update curl node npm aws-cli
       - run:
           name: Get backend url
           command: |
@@ -326,8 +319,7 @@ jobs:
               return 1
             fi
       - destroy-environment:
-          app1: udapeople-backend
-          app2: udapeople-frontend 
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations 
 
 workflows:
