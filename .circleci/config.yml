@@ -181,7 +181,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip ansible awscli
+            apk add --update tar gzip ansible awscli
       - run:
           name: Configure server
           command: |
@@ -270,7 +270,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip ansible node npm awscli
+            apk add --update tar gzip ansible node npm awscli
       - run:
           name: Deploy backend
           command: |
@@ -297,7 +297,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y curl node npm awscli
+            apk add --update curl node npm awscli
       - run:
           name: Get backend url
           command: |
