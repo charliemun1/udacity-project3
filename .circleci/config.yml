@@ -151,6 +151,27 @@ jobs:
           app1: udapeople-backend
           app2: udapeople-frontend
 
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["74:4b:62:99:e2:6f:b0:8c:38:be:02:74:a1:3e:f8:89"] 
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y tar gzip ansible awscli
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment:
+          app1: udapeople-backend
+          app2: udapeople-frontend 
 
 workflows:
   default:
