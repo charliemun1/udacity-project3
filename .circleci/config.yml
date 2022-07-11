@@ -173,11 +173,11 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: prooph/ansible-aws-cli
       # - image: python:3.7-alpine3.11
     steps:
       - checkout
-      - run: yum install -y tar gzip ansible
+      - run: yum install -y tar gzip
       - add_ssh_keys:
           fingerprints: ["74:4b:62:99:e2:6f:b0:8c:38:be:02:74:a1:3e:f8:89"] 
       - attach_workspace:
@@ -200,6 +200,9 @@ jobs:
           command: |
             cd .circleci/ansible
             ls
+            aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
