@@ -173,32 +173,31 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: prooph/ansible-aws-cli
-      # - image: python:3.7-alpine3.11
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
-      - run: yum install -y tar gzip
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            apk add --update tar
+            apk add --update gzip
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+            awscli \
+            && rm -rf /var/cache/apk/*
       - add_ssh_keys:
           fingerprints: ["74:4b:62:99:e2:6f:b0:8c:38:be:02:74:a1:3e:f8:89"] 
       - attach_workspace:
           at: /project/.circleci/ansible
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       apk add --update ansible
-      #       apk add --update tar
-      #       apk add --update gzip
-      #       apk add --no-cache \
-      #       python3 \
-      #       py3-pip \
-      #       && pip3 install --upgrade pip \
-      #       && pip3 install \
-      #       awscli \
-      #       && rm -rf /var/cache/apk/*
       - run:
           name: Configure server
           command: |
             cd .circleci/ansible
+            cat inventory.txt
             ls
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
