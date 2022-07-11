@@ -183,7 +183,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip ansible
+            apk add --update tar
+            apk add --update gzip
+            apk add --update ansible
             apk add --no-cache \
             python3 \
             py3-pip \
@@ -195,9 +197,6 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --output text >> inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
