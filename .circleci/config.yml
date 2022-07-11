@@ -192,7 +192,8 @@ jobs:
             # && rm -rf /var/cache/apk/*
 
             apk add --update python3
-            apk add pip3 install awscli
+            apk add --update py3-pip
+            apk add --update awscli
             
       - add_ssh_keys:
           fingerprints: ["74:4b:62:99:e2:6f:b0:8c:38:be:02:74:a1:3e:f8:89"] 
