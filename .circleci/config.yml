@@ -173,7 +173,8 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: amazon/aws-cli
+      # - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -183,25 +184,21 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
-            apk add --update tar
-            apk add --update gzip
-            apk add --no-cache \
-            python3 \
-            py3-pip \
-            && pip3 install --upgrade pip \
-            && pip3 install \
-            awscli \
-            && rm -rf /var/cache/apk/*
+            - run: yum install -y tar gzip ansible
+            # apk add --update ansible
+            # apk add --update tar
+            # apk add --update gzip
+            # apk add --no-cache \
+            # python3 \
+            # py3-pip \
+            # && pip3 install --upgrade pip \
+            # && pip3 install \
+            # awscli \
+            # && rm -rf /var/cache/apk/*
       - run:
           name: Configure server
           command: |
-            cat inventory.txt
-            ls
             cd .circleci/ansible
-            aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> inventory.txt
             ls
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
