@@ -135,7 +135,8 @@ jobs:
             # npm install oauth-sign@^0.9.0
             npm audit fix --audit-level=critical --force
             # If the "npm audit fix" command above could not fix all critical vulnerabilities, try “npm audit fix --force” again
-            # npm audit --audit-level=critical
+            npm audit fix --force
+            npm audit --audit-level=critical
 
 
   deploy-infrastructure:
@@ -252,15 +253,24 @@ jobs:
       
   deploy-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            npm install python3
-            npm install aws-cli
-            npm install tar gzip
+            apk add --update tar
+            apk add --update gzip
+            
+            apk add --update nodejs npm
+
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+            awscli \
+            && rm -rf /var/cache/apk/*
       - attach_workspace:
           at: ~/ 
       - run:
