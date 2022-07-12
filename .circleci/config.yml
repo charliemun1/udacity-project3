@@ -259,7 +259,6 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
-            yum install epel-release
             yum install -y nodejs
             yum install -y npm    
       - attach_workspace:
