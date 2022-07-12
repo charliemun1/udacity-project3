@@ -52,6 +52,7 @@ jobs:
             cd frontend
             npm install
             npm run build
+          no_output_timeout: 30m
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -69,6 +70,7 @@ jobs:
             cd backend
             npm install
             npm run build
+          no_output_timeout: 30m
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build       
@@ -217,6 +219,10 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            npm install aws-cli  
       - restore_cache:
           keys: [backend-build]
       - run:
