@@ -259,7 +259,8 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
-            yum install -y node
+            yum install epel-release
+            yum install -y nodejs
             yum install -y npm    
       - attach_workspace:
           at: ~/ 
@@ -297,7 +298,8 @@ jobs:
             apk add --update ansible
             apk add --update tar
             apk add --update gzip
-            apk add --update node npm
+            
+            apk add --update nodejs npm
 
             apk add --no-cache \
             python3 \
@@ -337,7 +339,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update curl node npm
+            apk add --update curl nodejs npm
             apk add --no-cache \
             python3 \
             py3-pip \
