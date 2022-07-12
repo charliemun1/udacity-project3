@@ -259,11 +259,8 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
-            yum install -y ansible
-            yum install -y python3
             yum install -y node
             yum install -y npm    
-            yum install -y aws-cli  
       - attach_workspace:
           at: ~/ 
       - run:
@@ -300,8 +297,7 @@ jobs:
             apk add --update ansible
             apk add --update tar
             apk add --update gzip
-            apk add --update node
-            apk add --update npm
+            apk add --update node npm
 
             apk add --no-cache \
             python3 \
