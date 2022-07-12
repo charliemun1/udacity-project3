@@ -222,12 +222,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            npm install python3 \
-            py3-pip \
-            && pip3 install --upgrade pip \
-            && pip3 install \
-            awscli \
-            && rm -rf /var/cache/apk/*
+            npm install python3
+            npm install aws-cli
       - restore_cache:
           keys: [backend-build]
       - run:
