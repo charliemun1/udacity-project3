@@ -300,15 +300,26 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            npm install python3
-            npm install aws-cli
-            npm install ansible tar gzip            
+            apk add --update ansible
+            apk add --update tar
+            apk add --update gzip
+            
+            apk add --update nodejs npm
+
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+            awscli \
+            && rm -rf /var/cache/apk/*
+            
       - add_ssh_keys:
           fingerprints: ["74:4b:62:99:e2:6f:b0:8c:38:be:02:74:a1:3e:f8:89"] 
       - attach_workspace:
@@ -339,14 +350,20 @@ jobs:
 
   smoke-test:
     docker:
-      - image: circleci/node:13.8.0
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            npm install python3
-            npm install aws-cli                      
+            apk add --update curl nodejs npm
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+            awscli \
+            && rm -rf /var/cache/apk/*            
       - run:
           name: Backend smoke test.
           command: |
@@ -382,9 +399,20 @@ jobs:
 
   cloudfront-update:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update curl nodejs npm
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+            awscli \
+            && rm -rf /var/cache/apk/*
       - run:
           name: Update cloudfront distribution
           command: |
