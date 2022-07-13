@@ -341,7 +341,6 @@ jobs:
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
-            tar -tvf ../../artifact.tar.gz
             ls
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
