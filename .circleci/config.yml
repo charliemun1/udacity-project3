@@ -224,6 +224,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            npm install curl
             npm install python3
             npm install aws-cli
       - restore_cache:
@@ -260,6 +261,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apk add --update curl
             apk add --update tar
             apk add --update gzip
             
@@ -306,6 +308,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apk add --update curl
             apk add --update ansible
             apk add --update tar
             apk add --update gzip
@@ -338,7 +341,7 @@ jobs:
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
-            tar -tvf ../../../../../artifact.tar.gz
+            tar -tvf ../../artifact.tar.gz
             ls
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
