@@ -372,6 +372,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters 'Name=instance-state-name,Values=running' \
               --output text)
+            echo "${BACKEND_IP}"
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok"
