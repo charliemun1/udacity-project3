@@ -9,6 +9,7 @@
     mode: 0644
 
 - name: Executing deploy
+  become: true 
   shell: |
     cd /var
     tar -xf artifact.tar.gz
