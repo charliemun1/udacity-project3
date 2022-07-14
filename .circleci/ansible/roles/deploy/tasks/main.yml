@@ -15,7 +15,7 @@
 - name: Executing deploy
   become: yes 
   shell: |
-    cd /app
+    cd app
     tar -xf artifact.tar.gz
     cd ./dist
 
