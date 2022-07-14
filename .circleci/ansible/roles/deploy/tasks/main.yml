@@ -12,12 +12,13 @@
   shell: |
     cd /var
     tar -xf artifact.tar.gz
-    cd ./dist
+    # cd ./dist
 
 - name: Start Backend with pm2
   become: yes 
   shell: |
-    pm2 start ./main.js
+    # pm2 start ./main.js
+    pm2 start npm -- start
   args:
     chdir: /var/dist
   environment:
