@@ -1,9 +1,13 @@
+- name: Creates directory
+  file:
+    path: ~/app
+    state: directory
+
 - name: Copy project files
   become: true 
   copy:
-    # src: "../../../../../artifact.tar.gz"
     src: ~/project/artifact.tar.gz
-    dest: "/var"
+    dest: "/app"
     owner: ubuntu
     group: ubuntu
     mode: 0755
@@ -11,11 +15,16 @@
 - name: Executing deploy
   become: yes 
   shell: |
-    cd /var
+    cd /app
     tar -xf artifact.tar.gz
-    pm2 start ./dist/main.js
+    cd ./dist
+
+- name: Start Backend with pm2
+  become: yes 
+  shell: |
+    pm2 start ./main.js
   args:
-    chdir: /home/ubuntu/var
+    chdir: /home/ubuntu/app/dist
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"  
@@ -27,3 +36,13 @@
     TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
     TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
     TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
+
+- name: Validate if the app is UP
+  tags: appvalidate
+  wait_for:
+    host: "localhost"
+    port: 3030
+    delay: 10
+    timeout: 30
+    state: started
+    msg: "Application server is not running"
