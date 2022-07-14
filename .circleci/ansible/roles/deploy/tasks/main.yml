@@ -5,8 +5,8 @@
     src: ~/project/artifact.tar.gz
     dest: /
     owner: ubuntu
-    group: ubuntu        
-    mode: 0644
+    group: ubuntu   
+    mode: 0755
 
 - name: Extraxt build files
   become: true 
