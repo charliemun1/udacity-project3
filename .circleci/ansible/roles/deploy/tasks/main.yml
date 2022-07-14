@@ -20,7 +20,7 @@
     # pm2 start ./main.js
     pm2 start npm -- start
   args:
-    chdir: /var/dist
+    chdir: /var
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"  
