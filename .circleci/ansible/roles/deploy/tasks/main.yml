@@ -1,16 +1,11 @@
-- name: Creates directory
-  file:
-    path: ~/app
-    state: directory
-
 - name: Copy project files
   become: true 
   copy:
     src: ~/project/artifact.tar.gz
-    dest: "/app"
+    dest: "/var"
     owner: ubuntu
     group: ubuntu
-    mode: 0755
+    mode: 0777
 
 - name: Executing deploy
   become: yes 
