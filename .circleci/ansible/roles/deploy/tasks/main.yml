@@ -7,17 +7,10 @@
     group: ubuntu
     mode: 0777
 
-- name: Executing deploy
-  become: yes 
-  shell: |
-    cd /var
-    tar -xf artifact.tar.gz
-    # cd ./dist
-
 - name: Start Backend with pm2
   become: yes 
   shell: |
-    # pm2 start ./main.js
+    tar -xf artifact.tar.gz
     pm2 start npm -- start
   args:
     chdir: /var
