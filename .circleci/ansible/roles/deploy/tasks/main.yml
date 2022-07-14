@@ -3,7 +3,7 @@
   copy:
     # src: "../../../../../artifact.tar.gz"
     src: ~/project/artifact.tar.gz
-    dest: ~/
+    dest: /
     owner: ubuntu
     group: ubuntu        
     mode: 0644
