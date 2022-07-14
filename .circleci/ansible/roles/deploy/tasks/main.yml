@@ -1,8 +1,10 @@
 - name: Copy build files
-  template:
+  become: true 
+  copy:
     # src: "../../../../../artifact.tar.gz"
-    src: "~/project/artifact.tar.gz"
-    dest: "~/"
+    src: ~/project/artifact.tar.gz
+    dest: ~/
+    mode: 0644
 
 - name: Executing deploy
   shell: |
