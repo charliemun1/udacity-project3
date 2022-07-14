@@ -13,9 +13,9 @@
   shell: |
     cd /var
     tar -xf artifact.tar.gz
-    pm2 start ./main.js
+    pm2 start ./dist/main.js
   args:
-    chdir: /home/ubuntu/var/dist
+    chdir: /home/ubuntu/var
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"  
