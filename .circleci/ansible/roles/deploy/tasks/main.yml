@@ -3,7 +3,7 @@
   copy:
     # src: "../../../../../artifact.tar.gz"
     src: ~/project/artifact.tar.gz
-    dest: /var/www/html
+    dest: /var
     owner: ubuntu
     group: ubuntu        
     mode: 0644
@@ -11,8 +11,6 @@
 - name: Executing deploy
   shell: |
     cd /var
-    mkdir /www
-    cd /www
     tar -xf artifact.tar.gz
     npm install
     pm2 stop default
