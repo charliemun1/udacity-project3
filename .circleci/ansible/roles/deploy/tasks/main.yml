@@ -15,7 +15,7 @@
 - name: Executing deploy
   become: yes 
   shell: |
-    cd app
+    cd /var
     tar -xf artifact.tar.gz
     cd ./dist
 
@@ -24,7 +24,7 @@
   shell: |
     pm2 start ./main.js
   args:
-    chdir: /home/ubuntu/app/dist
+    chdir: /var/dist
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"  
