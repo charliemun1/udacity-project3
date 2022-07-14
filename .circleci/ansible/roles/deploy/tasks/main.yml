@@ -11,7 +11,6 @@
 - name: Executing deploy
   become: true 
   shell: |
-    cd /var
     tar -xf artifact.tar.gz
     npm install
     pm2 stop default
