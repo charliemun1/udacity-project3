@@ -18,7 +18,7 @@
 - name: "install dependencies."
   become: yes
   apt:
-    name: ["nodejs", "npm"]
+    name: ["nodejs", "npm", "python3"]
     state: latest
     update_cache: yes
 
@@ -43,7 +43,7 @@
 - name: Executing deploy
   become: true 
   shell: |
-    cd var
+    cd /var
     tar -xf artifact.tar.gz
     npm install
     pm2 stop default
