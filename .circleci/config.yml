@@ -55,18 +55,13 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            export BACKEND_IP="192.168.2.1"
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project
-          #   cd frontend
-          #   npm install
-          #   npm run build
-          # no_output_timeout: 30m
-      # - save_cache:
-      #     paths: [frontend/node_modules]
-      #     key: frontend-build
+            cd frontend
+            npm install
+            npm run build
+          no_output_timeout: 30m
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
 
   build-backend:
     docker:
@@ -91,17 +86,14 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
-      # - restore_cache:
-      #     keys: [frontend-build]
+      - restore_cache:
+          keys: [frontend-build]
       - run:
           name: Front-end test
           command: |
-            echo $BACKEND_IP
-            # cd frontend
-            # npm install
-            # npm run test
+            cd frontend
+            npm install
+            npm run test
 
   test-backend:
     docker:
@@ -441,10 +433,6 @@ jobs:
               --stack-name InitialStack \
               --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
@@ -455,12 +443,13 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
           name: Get old stack workflow id
           command: |
             # Fetch the Old workflow ID
+            export OldWorkflowID=$(aws cloudformation \
+                    list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+                    --no-paginate --output text)
             echo OldWorkflowID: "${OldWorkflowID}"
             echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
             # Fetch the stack names          
@@ -485,26 +474,26 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
