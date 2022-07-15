@@ -423,6 +423,10 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
+            export OlderWorkflowID=$(aws cloudformation \
+                    list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+                    --no-paginate --output text)
+            echo OlderWorkflowID: "${OlderWorkflowID}"
             # Change the initial stack name, as applicable to you
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
