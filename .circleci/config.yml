@@ -56,13 +56,17 @@ jobs:
           name: Build front-end
           command: |
             export BACKEND_IP=192.168.2.1
-            cd frontend
-            npm install
-            npm run build
-          no_output_timeout: 30m
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project
+          #   cd frontend
+          #   npm install
+          #   npm run build
+          # no_output_timeout: 30m
+      # - save_cache:
+      #     paths: [frontend/node_modules]
+      #     key: frontend-build
 
   build-backend:
     docker:
@@ -87,15 +91,17 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [frontend-build]
+       - attach_workspace:
+          at: ~/
+      # - restore_cache:
+      #     keys: [frontend-build]
       - run:
           name: Front-end test
           command: |
             echo "IP: ${BACKEND_IP}"
-            cd frontend
-            npm install
-            npm run test
+            # cd frontend
+            # npm install
+            # npm run test
 
   test-backend:
     docker:
