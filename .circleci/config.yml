@@ -1,10 +1,5 @@
 version: 2.1
 
-parameters:
-  workflow_id:
-    type: string
-    default: 'kk1j287dhjppmz674'
-
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -448,6 +443,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - run:
