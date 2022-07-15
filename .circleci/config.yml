@@ -55,7 +55,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            export BACKEND_IP=192.168.2.1
+            export BACKEND_IP="192.168.2.1"
       - persist_to_workspace:
           root: ~/
           paths:
@@ -98,7 +98,7 @@ jobs:
       - run:
           name: Front-end test
           command: |
-            echo "IP: ${BACKEND_IP}"
+            echo $BACKEND_IP
             # cd frontend
             # npm install
             # npm run test
