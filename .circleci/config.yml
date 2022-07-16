@@ -169,7 +169,7 @@ jobs:
             export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters 'Name=instance-state-name,Values=running' 'Name=tag:Name,Values="backend-${WORKFLOW_ID}"' \
+              --filters 'Name=instance-state-name,Values=running' "Name=tag:Name,Values=backend-$WORKFLOW_ID" \
               --output text >> inventory.txt
       - persist_to_workspace:
           root: ~/
@@ -211,7 +211,7 @@ jobs:
             export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters 'Name=instance-state-name,Values=running' 'Name=tag:Name,Values="backend-${WORKFLOW_ID}"' \
+              --filters 'Name=instance-state-name,Values=running' "Name=tag:Name,Values=backend-$WORKFLOW_ID" \
               --output text >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
@@ -285,7 +285,7 @@ jobs:
             export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters 'Name=instance-state-name,Values=running' 'Name=tag:Name,Values="backend-${WORKFLOW_ID}"' \
+              --filters 'Name=instance-state-name,Values=running' "Name=tag:Name,Values=backend-$WORKFLOW_ID" \
               --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
@@ -346,7 +346,7 @@ jobs:
             export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters 'Name=instance-state-name,Values=running' 'Name=tag:Name,Values="backend-${WORKFLOW_ID}"' \
+              --filters 'Name=instance-state-name,Values=running' "Name=tag:Name,Values=backend-$WORKFLOW_ID" \
               --output text >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
@@ -378,7 +378,7 @@ jobs:
             export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters 'Name=instance-state-name,Values=running' 'Name=tag:Name,Values="backend-${WORKFLOW_ID}"' \
+              --filters 'Name=instance-state-name,Values=running' "Name=tag:Name,Values=backend-$WORKFLOW_ID" \
               --output text)
             echo "${BACKEND_IP}"
             export API_URL="http://${BACKEND_IP}:3030"
