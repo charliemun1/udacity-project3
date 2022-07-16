@@ -166,7 +166,6 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters 'Name=instance-state-name,Values=running' \
@@ -208,7 +207,6 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ls
-            export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters 'Name=instance-state-name,Values=running' \
@@ -282,7 +280,6 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters 'Name=instance-state-name,Values=running' \
@@ -343,7 +340,6 @@ jobs:
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
-            export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters 'Name=instance-state-name,Values=running' \
@@ -375,7 +371,6 @@ jobs:
           name: Backend smoke test.
           command: |
             # Fetch and prepare the BACKEND_IP env var
-            export WORKFLOW_ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters 'Name=instance-state-name,Values=running' \
