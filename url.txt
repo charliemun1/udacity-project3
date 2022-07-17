@@ -1,5 +1,5 @@
 URL01 = https://github.com/charliemun1/udacity-project3
 URL02 = http://udapeople-de4c628.s3-website-us-east-1.amazonaws.com
-URL03 = https://d2ecpkybveao5d.cloudfront.net
+URL03 = http://d2ecpkybveao5d.cloudfront.net
 URL04 = http://3.95.59.37:3030/api/status
 URL05 = http://ec2-52-5-75-131.compute-1.amazonaws.com:9090/targets
